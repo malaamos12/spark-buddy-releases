@@ -107,16 +107,3 @@ jobs:
           subprocess.run(['node','fixed-flow-test.cjs'],cwd=root,check=True,timeout=120)
           subprocess.run(['node','recovery-ui-test.cjs'],cwd=root,check=True,timeout=90)
           subprocess.run(['node','electron-helper.cjs','session-health.cjs','session-install.cjs'],cwd=root,check=True,timeout=180)
-          export = pathlib.Path(os.environ['GITHUB_WORKSPACE']) / 'verified-repair'
-          export.mkdir()
-          import shutil, hashlib
-          shutil.copy2(root / 'buddy-repair-candidate.exe', export / 'buddy-repair.exe')
-          digest = hashlib.sha256((export / 'buddy-repair.exe').read_bytes()).hexdigest()
-          (export / 'SHA256SUMS.txt').write_text(digest + '  buddy-repair.exe\n', encoding='utf-8')
-      - name: Temporary approved repair download, remove after retrieval
-        uses: actions/upload-artifact@v4
-        with:
-          name: verified-buddy-repair
-          path: verified-repair/*
-          retention-days: 1
-          if-no-files-found: error
